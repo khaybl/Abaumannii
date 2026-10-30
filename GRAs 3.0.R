@@ -91,4 +91,4 @@ Plasmídeos <- read.xlsx("C:/Users/khayl/Downloads/Tabela_para_o_X-Meeting_2 (US
 Plasm_sum <- as.matrix(colSums(Plasmídeos))
 colSums(Plasm_sum)
 
-teste de conexão
+teste de conexão 2
