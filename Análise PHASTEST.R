@@ -8,4 +8,4 @@ fagos <- read.xlsx("C:/Users/khayl/Downloads/Tabela_para_o_X-Meeting_2 (USAR ESS
 # Estatística descritiva ----
 
 ## Média de proteínas por fago identificado
-mean(na.omit(fagos$Total.Proteins))
+mean(na.omit(fagos$Total.Proteins)) 
