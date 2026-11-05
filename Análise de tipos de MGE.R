@@ -4,12 +4,12 @@ library(openxlsx); library(readxl); library(tidyverse)
 lista_MGEs <- read.xlsx("C:/Users/khayl/Downloads/Tabela_para_o_X-Meeting_2 (USAR ESSA).xlsx",
                         sheet = "Elementos - 535",
                         colNames = T)
-lista_MGEs$X4 <- NULL
+lista_MGEs$X5 <- NULL
 #View(lista_MGEs)
-head(lista_MGEs[1:5, 1:3])
+head(lista_MGEs)
 
-colnames(lista_MGEs) <- c("IS", "Tn", "Cn")
-length(lista_MGEs$IS); length(lista_MGEs$Tn); length(lista_MGEs$Cn)
+colnames(lista_MGEs) <- c("IS", "Cn", "Tn", "ICE")
+length(na.omit(lista_MGEs$IS)); length(na.omit(lista_MGEs$Tn)); length(na.omit(lista_MGEs$Cn)); length(na.omit(lista_MGEs$ICE))
 
 
 # EXTRAÇÃO DE DADOS ----
@@ -41,7 +41,8 @@ IS_compressed <- rbind(IS_maiorq80, ISmnrq80_matrix); IS_compressed
 colnames(IS_compressed) <- c("Freq Absoluta")
 IS_compressed <- t(IS_compressed);print(IS_compressed)
 
-l
+porcent_IS_comp <- prop.table(IS_compressed, margin = NULL)*100; rownames(porcent_IS_comp) <- c("Freq em %"); print(porcent_IS_comp)
+
 ### Plot de frequência absoluta ----
 par(mar = c(10, 6, 4, 1))
 barplot(IS_compressed,
@@ -81,19 +82,9 @@ tab_Tn <- as.matrix(sort(table(Tn), decreasing = T)); tab_Tn
 
 nrow(tab_Tn)
 
-Tnmaiorq10 <- as.matrix(sort(tab_Tn[tab_Tn >= 10], decreasing = T)) |> print()
-#Nomeação das linhas de IS_maiorq80
-names_maiorq <- rownames(tab_Tn); names_maiorq <- names_maiorq[1:9]
-#                 ↑ Vetorização dos nomes              ↑ Recorte do vetor para os nomes que quero
-rownames(Tnmaiorq10) <- c(names_maiorq)
-colnames(Tnmaiorq10) <- "Frequência absoluta"; Tnmaiorq10
+porcent_Tn <- prop.table(tab_Tn)*100; colnames(porcent_Tn) <- c("Freq em %")
 
-Tnmnrq10 <- as.matrix(sum(tab_Tn[tab_Tn <= 9])) |> print() # Integer
-rownames(Tnmnrq10) <- "Tn freq <9"
-Tnmnrq10
-
-Tn_compressed <- rbind(Tnmaiorq10, Tnmnrq10);Tn_compressed
-
+sum(tab_Tn)
 ### Plot de frequência absoluta ----
 par(mar = c(8, 6, 4, 1))
 barplot(t(Tn_compressed),
@@ -117,7 +108,7 @@ tab_Cn <- as.matrix(sort(table(Cn), decreasing = T)); tab_Cn
 nrow(tab_Cn)
 
 Cnmaiorq20 <- as.matrix(sort(tab_Cn[tab_Cn > 20], decreasing = T)); print(Cnmaiorq20)
-Cn_names <- rownames(tab_Cn);Cn_names <- Cn_names[1:18]
+Cn_names <- rownames(tab_Cn);Cn_names <- Cn_names[1:21]
 rownames(Cnmaiorq20) <- c(Cn_names); colnames(Cnmaiorq20) <- c("Frequência absoluta")
 
 Cnmnrq20 <- as.matrix(sum(tab_Cn[tab_Cn <= 20]))
@@ -131,6 +122,7 @@ tab_Cn_compressed <- rbind(Cnmaiorq20, Cnmnrq20)
 colnames(tab_Cn_compressed) <- "Frequência Absoluta"
 print(tab_Cn_compressed)
 
+porcent_Cn <- prop.table(tab_Cn_compressed)*100; colnames(porcent_Cn) <- c("Freq em %")
 ### Plot de frequência absoluta ----
 par(mar = c(6,4,2,2))
 barplot(t(tab_Cn_compressed),
@@ -143,6 +135,7 @@ tibble(tab_Cn_compressed)
 
 ### Skewness ----
 moments::skewness(tab_Cn)
+moments::kurtosis(tab_Cn)
 
 # Top 5
 tab_Cn_compressed[1:5,]
@@ -279,3 +272,13 @@ tabela_flex <- flextable(tabela_resumo) %>%
 
 tabela_flex
 write.xlsx(tabela_resumo, "tabela_resumo.csv", rowNames = FALSE)
+
+# RASCUNHO ----
+
+# Estatística descritiva dos GRAs dos MGEs
+GRAMGE <- read.xlsx("C:/Users/khayl/Downloads/Tabela_para_o_X-Meeting_2 (USAR ESSA).xlsx",
+                    sheet = "MGE - ARGs",
+                    colNames = T)
+GRAs <- GRAMGE$ARGs
+GRAs_tab <- as.matrix(sort(table(GRAs), decreasing = T))
+porcent_gras <- prop.table(GRAs_tab)*100; colnames(porcent_gras) <- c("Freq em %")
