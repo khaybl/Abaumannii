@@ -4,7 +4,7 @@ library(openxlsx); library(readxl);library(fdth); library(tidyverse)
 GRAs <- read.xlsx("C:/Users/khayl/Downloads/Tabela_para_o_X-Meeting_2 (USAR ESSA).xlsx",
                   rowNames = T,
                   colNames = T,
-                  sheet = "Resistoma - Quantitativo - 537")
+                  sheet = "Resistoma - Quantitativo - 535")
 
 GRAs
 
